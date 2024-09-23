@@ -21,7 +21,7 @@ jobs:
       run: |
         echo "Requesting OIDC subject token from GitHub..."
         TOKEN=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-                     "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://management.azure.com")
+                     "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange")
         echo $TOKEN > oidc_token.txt
 
     - name: Upload OIDC Token as Artifact
