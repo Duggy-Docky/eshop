@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Get OIDC Subject Token
+
+on:
+  workflow_dispatch: # 可以手动触发或设置为其他触发器
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  oidc_token:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Get OIDC Token from GitHub
+      id: get-oidc-token
+      run: |
+        echo "Requesting OIDC subject token from GitHub..."
+        TOKEN=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+                     "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange")
+        echo "OIDC Token: $TOKEN"
+        echo "::set-output name=subject_token::$TOKEN"
+
+    - name: Display OIDC Subject Token
+      run: |
+        echo "Subject Token: ${{ steps.get-oidc-token.outputs.subject_token }}"
